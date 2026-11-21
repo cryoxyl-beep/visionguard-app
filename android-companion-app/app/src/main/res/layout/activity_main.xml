@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#121212"
+    android:padding="20dp"
+    android:weightSum="10">
+
+    <!-- Header Status for Accessibility / TalkBack -->
+    <TextView
+        android:id="@+id/tvStatus"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1.5"
+        android:gravity="center"
+        android:textColor="#00E676"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:text="Status: Active &amp; Protected"
+        android:contentDescription="Application Status: Active and Protected. Location tracking enabled." />
+
+    <!-- Current Location / Coordinates Display -->
+    <TextView
+        android:id="@+id/tvLocation"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1.5"
+        android:gravity="center"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        android:text="Acquiring GPS coordinates..."
+        android:contentDescription="Current GPS coordinates loading" />
+
+    <!-- Huge One-Click Call Guardian Button (High contrast yellow on dark) -->
+    <Button
+        android:id="@+id/btnOneClickCall"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3.5"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="12dp"
+        android:background="#FFD600"
+        android:textColor="#000000"
+        android:textSize="32sp"
+        android:textStyle="bold"
+        android:text="CALL GUARDIAN\n(ONE CLICK)"
+        android:contentDescription="Call Guardian button. Double tap to instantly dial emergency contact." />
+
+    <!-- Giant Emergency SOS Button (Bright Red) -->
+    <Button
+        android:id="@+id/btnSos"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3.5"
+        android:background="#D50000"
+        android:textColor="#FFFFFF"
+        android:textSize="34sp"
+        android:textStyle="bold"
+        android:text="SEND SOS NOW"
+        android:contentDescription="Emergency SOS button. Double tap to send immediate distress alert and GPS coordinates via SMS and Firebase." />
+
+</LinearLayout>
