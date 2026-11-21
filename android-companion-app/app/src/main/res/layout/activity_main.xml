@@ -1,63 +1,356 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="#121212"
-    android:padding="20dp"
-    android:weightSum="10">
+    android:background="#0A0A0E"
+    android:fillViewport="true">
 
-    <!-- Header Status for Accessibility / TalkBack -->
-    <TextView
-        android:id="@+id/tvStatus"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1.5"
-        android:gravity="center"
-        android:textColor="#00E676"
-        android:textSize="22sp"
-        android:textStyle="bold"
-        android:text="Status: Active &amp; Protected"
-        android:contentDescription="Application Status: Active and Protected. Location tracking enabled." />
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
 
-    <!-- Current Location / Coordinates Display -->
-    <TextView
-        android:id="@+id/tvLocation"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1.5"
-        android:gravity="center"
-        android:textColor="#FFFFFF"
-        android:textSize="18sp"
-        android:text="Acquiring GPS coordinates..."
-        android:contentDescription="Current GPS coordinates loading" />
+        <!-- Top Header & Mute Indicator -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingBottom="10dp">
 
-    <!-- Huge One-Click Call Guardian Button (High contrast yellow on dark) -->
-    <Button
-        android:id="@+id/btnOneClickCall"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="3.5"
-        android:layout_marginTop="12dp"
-        android:layout_marginBottom="12dp"
-        android:background="#FFD600"
-        android:textColor="#000000"
-        android:textSize="32sp"
-        android:textStyle="bold"
-        android:text="CALL GUARDIAN\n(ONE CLICK)"
-        android:contentDescription="Call Guardian button. Double tap to instantly dial emergency contact." />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="SMART CANE LIVE"
+                android:textColor="#E0E0E0"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:contentDescription="Smart Cane Live Navigation System" />
 
-    <!-- Giant Emergency SOS Button (Bright Red) -->
-    <Button
-        android:id="@+id/btnSos"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="3.5"
-        android:background="#D50000"
-        android:textColor="#FFFFFF"
-        android:textSize="34sp"
-        android:textStyle="bold"
-        android:text="SEND SOS NOW"
-        android:contentDescription="Emergency SOS button. Double tap to send immediate distress alert and GPS coordinates via SMS and Firebase." />
+            <TextView
+                android:id="@+id/tvMutedBadge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="MUTED"
+                android:background="@drawable/badge_bg"
+                android:textColor="#FFA726"
+                android:textStyle="bold"
+                android:textSize="12sp"
+                android:visibility="gone"
+                android:contentDescription="Cane audio alerts muted" />
+        </LinearLayout>
 
-</LinearLayout>
+        <!-- Top Live Status Banner (Color Coded: Green, Amber, Orange, Red) -->
+        <LinearLayout
+            android:id="@+id/bannerStatusContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#1B5E20"
+            android:padding="18dp"
+            android:elevation="4dp"
+            android:layout_marginBottom="14dp">
+
+            <TextView
+                android:id="@+id/tvStatusCode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="PATH_CLEAR"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.08" />
+
+            <TextView
+                android:id="@+id/tvAlertText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Path is clear ahead"
+                android:textColor="#FFFFFF"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:contentDescription="Status message: Path is clear ahead" />
+        </LinearLayout>
+
+        <!-- Prominent Emergency Alert Card (Visible on FALL_DETECTED, MANUAL_SOS, STAIR_DROPOFF) -->
+        <LinearLayout
+            android:id="@+id/cardEmergencyAlert"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/alert_card_bg"
+            android:padding="16dp"
+            android:layout_marginBottom="14dp"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/tvEmergencyTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="EMERGENCY ALERT TRIGGERED"
+                android:textColor="#FF1744"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvEmergencySubtitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Fall / Hazard detected. Emergency SMS dispatch initiated."
+                android:textColor="#FFCDD2"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/btnClearAlert"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginTop="12dp"
+                android:background="#D50000"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:text="ACKNOWLEDGE / CLEAR ALERT"
+                android:contentDescription="Acknowledge and clear emergency alert" />
+        </LinearLayout>
+
+        <!-- Live Metrics Section: 3 High Contrast Cards -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="LIVE SENSOR METRICS"
+            android:textColor="#9E9E9E"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="3"
+            android:layout_marginBottom="16dp">
+
+            <!-- Card 1: Front Distance -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="110dp"
+                android:layout_weight="1"
+                android:layout_marginEnd="6dp"
+                android:background="@drawable/card_bg"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:padding="8dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="FRONT"
+                    android:textColor="#00E5FF"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvFrontCm"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="-- cm"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Obstacle"
+                    android:textColor="#757575"
+                    android:textSize="11sp" />
+            </LinearLayout>
+
+            <!-- Card 2: Down / Stair Distance -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="110dp"
+                android:layout_weight="1"
+                android:layout_marginStart="3dp"
+                android:layout_marginEnd="3dp"
+                android:background="@drawable/card_bg"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:padding="8dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="DOWN"
+                    android:textColor="#FFD600"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvDownCm"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="-- cm"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Drop / Stair"
+                    android:textColor="#757575"
+                    android:textSize="11sp" />
+            </LinearLayout>
+
+            <!-- Card 3: Tilt / Impact -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="110dp"
+                android:layout_weight="1"
+                android:layout_marginStart="6dp"
+                android:background="@drawable/card_bg"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:padding="8dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="TILT / IMPACT"
+                    android:textColor="#FF4081"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvTiltDelta"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0.0"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvTiltZ"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Z: 0.0"
+                    android:textColor="#757575"
+                    android:textSize="11sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Live GPS & Last Sent Location Card -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/card_bg"
+            android:padding="14dp"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="CURRENT PHONE GPS COORDINATES"
+                android:textColor="#80CBC4"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvGpsCoordinates"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Acquiring GPS location..."
+                android:textColor="#FFFFFF"
+                android:textSize="15sp"
+                android:fontFamily="monospace" />
+
+            <TextView
+                android:id="@+id/tvLastSmsStatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="SMS Dispatch Status: Idle (Ready)"
+                android:textColor="#B0BEC5"
+                android:textSize="13sp" />
+        </LinearLayout>
+
+        <!-- Emergency Contact Section -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="EMERGENCY CONTACT &amp; AUTO-SMS"
+            android:textColor="#9E9E9E"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="12dp">
+
+            <EditText
+                android:id="@+id/etEmergencyContact"
+                android:layout_width="0dp"
+                android:layout_height="54dp"
+                android:layout_weight="1"
+                android:background="@drawable/input_bg"
+                android:hint="Enter phone number (e.g. +91...)"
+                android:textColorHint="#616161"
+                android:textColor="#FFFFFF"
+                android:inputType="phone"
+                android:paddingStart="14dp"
+                android:paddingEnd="14dp"
+                android:textSize="16sp"
+                android:contentDescription="Emergency Contact Phone Number" />
+
+            <Button
+                android:id="@+id/btnSaveContact"
+                android:layout_width="wrap_content"
+                android:layout_height="54dp"
+                android:layout_marginStart="8dp"
+                android:background="#2979FF"
+                android:textColor="#FFFFFF"
+                android:text="SAVE"
+                android:textStyle="bold"
+                android:paddingStart="18dp"
+                android:paddingEnd="18dp"
+                android:contentDescription="Save Emergency Contact" />
+        </LinearLayout>
+
+        <!-- Test Emergency SMS Button -->
+        <Button
+            android:id="@+id/btnTestSms"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:background="#37474F"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:layout_marginBottom="12dp"
+            android:text="TEST EMERGENCY SMS (DEMO)"
+            android:contentDescription="Test Emergency SMS with live coordinates" />
+
+        <!-- 1-Click Call Guardian Button -->
+        <Button
+            android:id="@+id/btnCallGuardian"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:background="#FFD600"
+            android:textColor="#000000"
+            android:textStyle="bold"
+            android:textSize="17sp"
+            android:text="CALL GUARDIAN (1-CLICK)"
+            android:contentDescription="Call Guardian directly" />
+
+    </LinearLayout>
+</ScrollView>
